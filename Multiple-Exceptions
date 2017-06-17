@@ -1,0 +1,65 @@
+package example1;
+
+import java.io.IOException;
+import java.net.PortUnreachableException;
+import java.net.SocketException;
+import java.rmi.activation.ActivationException;
+
+import javax.script.ScriptException;
+
+public class App {
+
+	public static void main(String[] args) {
+		
+		Ship ship = new Ship();
+		
+		// Using try/catch to handle unrelated exception types
+		
+		try {
+			ship.fullSail();
+		} catch (ScriptException e1) {
+			System.out.println("ScriptException error. Your program has exploded.");
+		} catch (ActivationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		// Using multiple catch blocks for every exception
+		// Important to note that there is a hierarchy as follows IOException -> SocketException -> PortUnreachableException
+		// In such parent/child situations, catch block order from child(s) -> parent(s) must be followed to catch errors properly
+		
+		try {
+			ship.plotCourse();
+		} catch (PortUnreachableException e) {
+			System.out.println("Could not reach port 6112");
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Java 7+ try-multi catch
+		// Important to note try-multie catch cannot be formatted to take advantage of child(s) -> parent(s) hierarchy rules from the previous example
+		// Therefore when dealing with multiple exceptions of a particular exception class and its children classes, multiple catch blocks will be used
+		// try-multi catch is useful for handling unrelated exception types
+		
+		try {
+			ship.fullSail();
+		} catch (ScriptException | ActivationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// The supertype class Exception, the parent of all Exception classes, is used to handle any thrown exception and is an example of polymorphism in action
+		
+		try {
+			ship.plotCourse();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}
